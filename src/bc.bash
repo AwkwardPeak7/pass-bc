@@ -21,19 +21,19 @@ set_git $passfile
 if [[ -f $passfile ]]; then
     local file_contents=`$GPG -d "${GPG_OPTS[@]}" "$passfile"`
 
-    local header=`echo "$file_contents" | head -n 1`
-    if [[ "$header" != "# pass-botp" ]]; then
-        die "Error: $passfile needs pass-botp header '# pass-botp'"
+    local all_backup_codes=`echo "$file_contents" | sed -n '/^## pass-bc/,/^## pass-bc/{ /##/d ; p}'`
+    if [[ -z "$all_backup_codes" ]]; then
+        die "Error: $passfile needs pass-bc '## pass-bc' inclosed backup codes"
     fi
 
-    local backup_code=`echo "$file_contents" | grep -m 1 "^[^#;]"`
+    local backup_code=`echo "$all_backup_codes" | grep -m 1 "^[^#;]"`
 
     if [[ -z "$backup_code" ]]; then
         die "Unable to get backup code"
-    fi 
-    
+    fi
+
     local updated_file_contents=`sed "s/$backup_code/# $backup_code/" <<< $file_contents`
-    
+
     if [[ $clip -eq 0 ]]; then
         echo $backup_code
     else
