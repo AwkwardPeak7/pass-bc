@@ -1,56 +1,64 @@
-# pass-botp
+# pass-bc
 
 A [pass](https://www.passwordstore.org/) extension for managing TOTP Backup Codes
+Forked from [pass-botp](https://github.com/msmol/pass-botp)
+This version supports adding TOTP Backup Codes to the same file which contains the password
 
 ## Usage
 
 ```
-$ pass botp
-Usage: pass botp [--clip,-c] pass-name
+$ pass bc
+Usage: pass bc [--clip,-c] pass-name
 ```
 
 ## Example
 
-`pass-botp` assumes your backup codes are stored line by line.
+`pass-bc` assumes your backup codes are stored line by line in the password file, enclosed with `## pass-bc`.
 
-The first line of your file *must* be `# pass-botp`. Without this header `pass-botp` will refuse to give you a backup code and will not modify the file.
-
-E.g. `backup_codes.gpg`:
+E.g. `password-file.gpg`:
 
 ```
-# pass-botp
+somepassword
+
+some other metadate
+
+## pass-bc
 111 111
 222 222
 333 333
 444 444
-...
+## pass-bc
 ```
 
-pass-botp will provide you with the first non-commented line, and then comment that line out:
+pass-bc will provide you with the first non-commented line, and then comment that line out:
 
 ```
-$ pass botp backup_codes
+$ pass botp password-file
 111 111
 ```
 
-`backup_codes.gpg` will now be:
+password-file will now be:
 
 ```
-# pass-botp
+somepassword
+
+some other metadate
+
+## pass-bc
 # 111 111
 222 222
 333 333
 444 444
-...
+## pass-bc
 ```
 
-On each subsequent run, `pass-botp` will give the next available backup code (in this case, `222 222`) until none remain.
+On each subsequent run, `pass-bc` will give the next available backup code (in this case, `222 222`) until none remain.
 
 ## Copying to clipboard
 
 Simply add `-c` or `--clip`
 
 ```
-$ pass botp -c backup_codes
-Copied Backup code for backup_codes to clipboard. Will clear in X seconds.
+$ pass bc -c password-file
+Copied Backup code for password-file to clipboard. Will clear in X seconds.
 ```
