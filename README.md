@@ -1,7 +1,9 @@
 # pass-bc
 
 A [pass](https://www.passwordstore.org/) extension for managing TOTP Backup Codes
+
 Forked from [pass-botp](https://github.com/msmol/pass-botp)
+
 This version supports adding TOTP Backup Codes to the same file which contains the password
 
 ## Usage
